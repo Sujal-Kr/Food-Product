@@ -5,10 +5,6 @@ export class ApiError extends Error {
   }
 }
 
-// export class ValidationErrorResponse  {
-//   constructor(message) {
-//     this.statusCode = statusCode;
-//     this.data = data;
-//     this.message = message;
-//   }
-// }
+
+
+
