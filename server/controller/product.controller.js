@@ -1,17 +1,16 @@
-import { TryCatch } from "../middleware/error.js";
 import { productModel } from "../models/product.model.js";
 import { ApiError } from "../utils/error.js";
 
-const getAllProducts = TryCatch(async (req, res, next) => {
+const getAllProducts = async (_, res ) => {
   const products = await productModel.find({});
   return res.status(200).json({
     success: true,
     message: "Product Retrieved Successfully",
     products,
   });
-});
+}
 
-const createProduct = TryCatch(async (req, res, next) => {
+const createProduct = async (req, res) => {
   const { name, price, category } = req.body;
 
   const product = await productModel.create({ name, price, category });
@@ -21,9 +20,9 @@ const createProduct = TryCatch(async (req, res, next) => {
     message: "Product Created Successfully",
     product,
   });
-});
+}
 
-const deleteProduct = TryCatch(async (req, res, next) => {
+const deleteProduct = async (_, res) => {
   const product = await productModel.findById(id);
   if (!product) {
     throw new ApiError(400, "Product not found");
@@ -35,9 +34,9 @@ const deleteProduct = TryCatch(async (req, res, next) => {
     message: "Product Deleted Successfully",
     product,
   });
-});
+}
 
-const updateProduct = TryCatch(async (req, res, next) => {
+const updateProduct = async (req, res) => {
   const id = req.params.id;
   const { name, category, price } = req.body;
 
@@ -58,6 +57,7 @@ const updateProduct = TryCatch(async (req, res, next) => {
     message: "Product updated successfully",
     product,
   });
-});
+}
 
-export { createProduct, deleteProduct, updateProduct, getAllProducts };
+export { createProduct, deleteProduct, getAllProducts, updateProduct };
+
