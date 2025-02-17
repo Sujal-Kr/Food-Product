@@ -9,6 +9,7 @@ import { productRouter } from "./router/product.router.js";
 connect()
 import { handleApiError } from "./middleware/error.js";
 import { authRouter } from "./router/auth.router.js";
+import { adminRouter } from "./router/admin.router.js";
 
 
 
@@ -28,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use('/api/v1/auth',authRouter)
 app.use('/api/v1/product',productRouter)
+app.use('/api/v1/admin',adminRouter)
 
 // to handle api errors
 app.use(handleApiError)
