@@ -1,10 +1,11 @@
-import { options } from "../constants/config";
-import { ApiError } from "../utils/error";
+import { options } from "../constants/config.js";
+import { ApiError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
 const verify = async (req, res) => {
   const { secret } = req.body;
-  const key = process.env.ADMIN_SECRET_KEY || "amdin";
+  const key = process.env.ADMIN_SECRET_KEY || "admin";
+  console.log(key)
   const isMatch = key === secret;
 
   if (!isMatch) {

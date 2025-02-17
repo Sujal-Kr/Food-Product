@@ -1,7 +1,6 @@
 import express from "express";
 import asyncHandler from "../utils/asyncHandler.js";
-import { verify } from "jsonwebtoken";
-import { logout } from "../controller/admin.controller.js";
+import { logout, verify } from "../controller/admin.controller.js";
 const adminRouter = express.Router();
 
 adminRouter.route("/verify").post(asyncHandler(verify));
