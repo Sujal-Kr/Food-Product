@@ -1,4 +1,5 @@
 import mongoose, { Schema, Types } from "mongoose";
+
 const orderSchema = new Schema(
   {
     user: {
@@ -6,11 +7,20 @@ const orderSchema = new Schema(
       ref: "user",
       required: true,
     },
-    items: {
-      type: [Types.ObjectId],
-      ref: "product",
-      required: true,
-    },
+    items: [
+      {
+        product: {
+          type: Types.ObjectId,
+          ref: "product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1, 
+        },
+      },
+    ],
     amount: {
       type: Number,
       required: true,
@@ -26,4 +36,5 @@ const orderSchema = new Schema(
 
 const orderModel =
   mongoose.models.order || mongoose.model("order", orderSchema);
+
 export { orderModel };

@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import bcrypt from "bcrypt";
+import { roles } from "../constants/data.js";
 
 const userSchema = new Schema({
   name: {
@@ -17,6 +18,11 @@ const userSchema = new Schema({
     max: [20, "Password must be at most 20 characters"],
     select:false
   },
+  role:{
+    type:String,
+    enum:Object.values(roles),
+    default:"user",
+  }
 });
 
 userSchema.pre("save", async function (next) {
