@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/error.js";
+import { userModel } from "../models/user.model.js";
 
 const protectRoute = async (req, _, next) => {
   const secret = process.env.JWT_SECRET_KEY;

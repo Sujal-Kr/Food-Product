@@ -6,11 +6,13 @@ const sendToken = (res, user, code, message) => {
   return res.status(code).json({
     success: true,
     message,
-    user
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+    },
   });
 };
 
 export { sendToken };
-
-
-

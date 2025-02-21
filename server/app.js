@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import { connect } from "./utils/connection.js";
 import { productRouter } from "./router/product.router.js";
 connect()
+import client from "./config/redisClient.js";
 import { handleApiError } from "./middleware/error.js";
 import { authRouter } from "./router/auth.router.js";
 import { adminRouter } from "./router/admin.router.js";
