@@ -3,7 +3,7 @@ import { ApiError } from "../utils/error.js";
 import bcrypt from "bcrypt";
 import { sendToken } from "../utils/utility.js";
 import { options } from "../constants/config.js";
-import { TryCatch } from "../middleware/error.js";
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;

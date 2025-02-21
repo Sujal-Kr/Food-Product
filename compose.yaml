@@ -1,0 +1,34 @@
+version: "3.8"
+name: dockercomposeapp
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    environment:
+      - PORT=4000
+      - DB_URL=mongodb://localhost:27017/techugo
+      - JWT_SECRET_KEY=sdkfnsf94-HJEi-83kl
+      - ADMIN_SECRET_KEY=jttu-748c-HJEi-uj98
+    ports:
+      - 4000:4000
+    depends_on:
+      - mongodb
+
+  mongodb:
+    image: mongo
+    container_name: dockercomposemongo
+    ports:
+      - 27071:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - appdata:/data/db
+    
+      
+
+
+volumes:
+  appdata:
+    driver: local

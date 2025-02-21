@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/error.js";
+import { userModel } from "../models/user.model.js";
 
 const protectRoute = async (req, _, next) => {
   const secret = process.env.JWT_SECRET_KEY;
@@ -36,11 +37,22 @@ const adminRoute = (req, _, next) => {
   const admin = process.env.ADMIN_SECRET_KEY || "amdin";
 
   const isMatch = payload.key === admin;
-  
+
   if (!isMatch) {
     throw new ApiError(400, "Unauthorized Access");
   }
   next();
 };
 
-export { protectRoute, adminRoute };
+const authorize = (roles) => {
+  return async (req, res, next) => {
+    const user = await userModel.findById(req._id);
+
+    if (!roles.includes(user.role)) {
+      throw new ApiError(403, "Access denied! You don't have permission.");
+    }
+    next();
+  };
+};
+
+export { protectRoute, adminRoute, authorize };

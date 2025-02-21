@@ -5,11 +5,12 @@ import {
   getAllProducts,
   updateProduct,
 } from "../controller/product.controller.js";
-import { protectRoute } from "../middleware/auth.js";
+import { authorize, protectRoute } from "../middleware/auth.js";
 import { validateRequest } from "../middleware/validation.js";
 import { objectIdSchema } from "../schema/objectId.js";
 import { productSchema } from "../schema/product.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import { roles } from "../constants/data.js";
 const productRouter = express.Router();
 
 //use middleware protect route
@@ -20,7 +21,11 @@ productRouter.use(protectRoute);
 
 productRouter
   .route("/")
-  .post(validateRequest(productSchema), asyncHandler(createProduct));
+  .post(
+    asyncHandler(authorize([roles.ADMIN, roles.SUPER_ADMIN])),
+    validateRequest(productSchema),
+    asyncHandler(createProduct)
+  );
 
 productRouter
   .route("/:id")
