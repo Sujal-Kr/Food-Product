@@ -1,12 +1,26 @@
+import { ALL_ORDERS } from "../constants/data.js";
+import { deleteCache, getCache, setCache } from "../lib/redis.js";
 import { orderModel } from "../models/order.model.js";
 import { productModel } from "../models/product.model.js";
 import { ApiError } from "../utils/error.js";
 
 const getMyOrders = async (req, res) => {
+  const key = `orders:${req._id}`;
+  const cachedOrders = await getCache(key);
+
+  if (cachedOrders) {
+    return res.status(200).json({
+      success: true,
+      message: "Order Results (from cache)",
+      orders: cachedOrders,
+    });
+  }
   const orders = await orderModel
     .find({ user: req._id })
     .populate("user", "name email")
     .populate("items.product", "name price");
+
+  await setCache(key, orders, 300);
 
   return res.status(200).json({
     success: true,
@@ -28,7 +42,7 @@ const createOrder = async (req, res) => {
   const amount = products.reduce((total, product, index) => {
     return total + product.price * items[index].quantity;
   }, 0);
-  
+
   console.log(amount);
 
   const order = await orderModel.create({
@@ -38,6 +52,9 @@ const createOrder = async (req, res) => {
     payment,
   });
 
+  await deleteCache(ALL_ORDERS);
+  await deleteCache(`orders:${req._id}`);
+
   return res.status(201).json({
     success: true,
     message: "Order created successfully",
@@ -46,6 +63,7 @@ const createOrder = async (req, res) => {
 };
 
 const deleteOrder = async (req, res) => {
+  
   const { id } = req.params;
   const order = await orderModel.findById(id);
   if (!order) {
@@ -55,6 +73,9 @@ const deleteOrder = async (req, res) => {
     throw new ApiError(401, "Unauthorized operation");
   }
   await orderModel.findByIdAndDelete(id);
+
+  await deleteCache(ALL_ORDERS);
+  await deleteCache(`orders:${req._id}`);
 
   return res.status(200).json({
     success: true,
@@ -76,6 +97,9 @@ const updateOrderStatus = async (req, res) => {
   order.payement = payement;
   await order.save();
 
+  await deleteCache(ALL_ORDERS);
+  await deleteCache(`orders:${req._id}`);
+
   return res.status(200).json({
     success: true,
     message: "Order updated successfully",
@@ -83,10 +107,22 @@ const updateOrderStatus = async (req, res) => {
 };
 
 const getAllOrders = async (_, res) => {
+  const cachedOrders = await getCache(ALL_ORDERS);
+
+  if (cachedOrders) {
+    return res.status(200).json({
+      success: true,
+      message: "Order Results (from cache)",
+      orders: cachedOrders,
+    });
+  }
+
   const orders = await orderModel
     .find({})
     .populate("user", "name email")
     .populate("items.product", "name price");
+
+  await setCache(ALL_ORDERS, orders, 300);
 
   return res.status(200).json({
     success: true,

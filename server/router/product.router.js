@@ -18,14 +18,11 @@ const productRouter = express.Router();
 productRouter.route("/").get(asyncHandler(getAllProducts));
 
 productRouter.use(protectRoute);
+productRouter.use(asyncHandler(authorize([roles.ADMIN, roles.SUPER_ADMIN])));
 
 productRouter
   .route("/")
-  .post(
-    asyncHandler(authorize([roles.ADMIN, roles.SUPER_ADMIN])),
-    validateRequest(productSchema),
-    asyncHandler(createProduct)
-  );
+  .post(validateRequest(productSchema), asyncHandler(createProduct));
 
 productRouter
   .route("/:id")

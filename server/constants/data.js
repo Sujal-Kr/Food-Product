@@ -4,4 +4,7 @@ const roles = {
   SUPER_ADMIN: "superadmin",
 };
 
-export { roles };
+const ALL_PRODUCTS = "all_products";
+const ALL_ORDERS = "all_orders";
+
+export { roles, ALL_PRODUCTS , ALL_ORDERS};

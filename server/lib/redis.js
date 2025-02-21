@@ -2,20 +2,23 @@ import client from "../config/redisClient.js";
 
 const getCache = async (key) => {
   try {
-    return await client.get(key);
-  } catch (err) {
-    console.log(err.message);
+    const data = await client.get(key);
+    return data ? JSON.parse(data) : null;
+  } catch (error) {
+    console.log(error.message);
     return null;
   }
 };
 
 const setCache = async (key, value, ttl = 60) => {
   try {
-    await client.set(key, value, { EX: ttl });
-  } catch (error) {
+    await client.set(key, JSON.stringify(value), { EX: ttl });
+  } catch (err) {
     console.log(err.message);
   }
 };
+
+
 
 const deleteCache = async (key) => {
   try {
