@@ -18,6 +18,15 @@ const setCache = async (key, value, ttl = 60) => {
   }
 };
 
+const getExpire = async (key)=>{
+  try {
+    return await client.ttl(key)
+  } catch (err) {
+    console.log(err.message)
+    return null
+  }
+}
+
 
 
 const deleteCache = async (key) => {
@@ -28,4 +37,4 @@ const deleteCache = async (key) => {
   }
 };
 
-export { getCache, setCache, deleteCache };
+export { getCache, setCache, deleteCache ,getExpire };

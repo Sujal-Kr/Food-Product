@@ -12,6 +12,8 @@ import { handleApiError } from "./middleware/error.js";
 import { authRouter } from "./router/auth.router.js";
 import { adminRouter } from "./router/admin.router.js";
 import { orderRouter } from "./router/order.router.js";
+import asyncHandler from "./utils/asyncHandler.js";
+import { rateLimiter } from "./middleware/limit.js";
 
 
 
@@ -28,6 +30,7 @@ app.get("/", (req, res) => {
   return res.send("Hello, world!");
 });
 
+app.use(asyncHandler(rateLimiter))
 
 app.use('/api/v1/auth',authRouter)
 app.use('/api/v1/product',productRouter)

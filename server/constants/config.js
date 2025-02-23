@@ -4,7 +4,7 @@ const options = {
   maxAge: 1000 * 60 * 60 * 24,
 };
 
-const REDIS_URL = console.log(process.env.REDIS_URL);
+const REDIS_URL = process.env.REDIS_URL;
 
 
 
