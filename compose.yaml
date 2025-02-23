@@ -7,27 +7,33 @@ services:
       dockerfile: Dockerfile
     environment:
       - PORT=4000
-      - DB_URL=mongodb://localhost:27017/techugo
+      - DB_URL=mongodb://admin:password@mongodb:27017/techugo?authSource=admin
       - JWT_SECRET_KEY=sdkfnsf94-HJEi-83kl
       - ADMIN_SECRET_KEY=jttu-748c-HJEi-uj98
+      - REDIS_URL=redis://redis:6379
+      - LIMIT=10
     ports:
-      - 4000:4000
+      - "4000:4000"
     depends_on:
       - mongodb
+      - redis
 
   mongodb:
     image: mongo
     container_name: dockercomposemongo
     ports:
-      - 27071:27017
+      - "27071:27017"
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - appdata:/data/db
-    
-      
 
+  redis:
+    image: redis:latest
+    container_name: dockercomposeredis
+    ports:
+      - "6379:6379"
 
 volumes:
   appdata:
