@@ -1,3 +1,6 @@
+import fs from "fs";
+import csv from "csv-parser";
+import _ from "lodash";
 import { ALL_PRODUCTS } from "../constants/data.js";
 import { deleteCache, getCache, setCache } from "../lib/redis.js";
 import { productModel } from "../models/product.model.js";
@@ -40,9 +43,11 @@ const createProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const id = req.params.id;
   const product = await productModel.findById(id);
-  if (!product) {
+
+  if (_isEmpty(product)) {
     throw new ApiError(400, "Product not found");
   }
+
   await productModel.findByIdAndDelete(id);
   await deleteCache(ALL_PRODUCTS);
 
@@ -59,7 +64,7 @@ const updateProduct = async (req, res) => {
 
   const product = await productModel.findById(id);
 
-  if (!product) {
+  if (_.isEmpty(product)) {
     throw new ApiError(404, "Product is not found");
   }
 
@@ -77,4 +82,38 @@ const updateProduct = async (req, res) => {
   });
 };
 
-export { createProduct, deleteProduct, getAllProducts, updateProduct };
+const insertProducts = async (req, res) => {
+  const file = req.file.path;
+
+  const products = [];
+
+  fs.createReadStream(file)
+    .pipe(csv())
+    .on("data", (data) => {
+      products.push(data);
+    })
+    .on("end", async () => {
+      fs.unlinkSync(file);
+
+      const data = await productModel.insertMany(products);
+      await deleteCache(ALL_PRODUCTS);
+      
+      return res.status(201).json({
+        success: true,
+        message: "Product created successfully",
+        products: data,
+      });
+    })
+    .on("error", (err) => {
+      fs.unlinkSync(file);
+      throw new ApiError(500, `Error while parsing:${err.message}`);
+    });
+};
+
+export {
+  createProduct,
+  deleteProduct,
+  getAllProducts,
+  updateProduct,
+  insertProducts,
+};

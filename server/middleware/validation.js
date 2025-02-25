@@ -6,7 +6,7 @@ const validateRequest = (schema, property = "body") => {
     if (error) {
       return res
         .status(400)
-        .json({ success: false, message: error.details[0].message });
+        .json({ success: false, message:"validation error: "+ error.details[0].message });
     }
     next()
   };
