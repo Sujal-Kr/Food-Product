@@ -5,6 +5,7 @@ import { ALL_PRODUCTS } from "../constants/data.js";
 import { deleteCache, getCache, setCache } from "../lib/redis.js";
 import { productModel } from "../models/product.model.js";
 import { ApiError } from "../utils/error.js";
+import { productSchema } from "../schema/product.js";
 
 const getAllProducts = async (_, res) => {
   const cachedProducts = await getCache(ALL_PRODUCTS);
@@ -82,22 +83,34 @@ const updateProduct = async (req, res) => {
   });
 };
 
-const insertProducts = async (req, res) => {
+const insertProducts = async (req, res, next) => {
   const file = req.file.path;
 
   const products = [];
+  const errors = [];
 
   fs.createReadStream(file)
     .pipe(csv())
     .on("data", (data) => {
-      products.push(data);
+      const { error, value } = productSchema.validate(data);
+
+        if (error) {
+          // console.log(`Validation failed: ${error.message}`)
+          errors.push(`Validation failed: ${error.message}`);
+          return; 
+        }
+        products.push(value);
     })
     .on("end", async () => {
       fs.unlinkSync(file);
 
+      if (errors) {
+        return next(new ApiError(400, `Some products failed validation: ${errors[0]}`));
+      }
+
       const data = await productModel.insertMany(products);
       await deleteCache(ALL_PRODUCTS);
-      
+
       return res.status(201).json({
         success: true,
         message: "Product created successfully",
@@ -109,6 +122,7 @@ const insertProducts = async (req, res) => {
       throw new ApiError(500, `Error while parsing:${err.message}`);
     });
 };
+
 
 export {
   createProduct,
