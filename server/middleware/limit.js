@@ -10,7 +10,7 @@ const rateLimiter = async (req, res, next) => {
   if (requests && requests > limit) {
     throw new ApiError(429, `Too many requests. Try again after ${await getExpire(ip)}s.`);
   }
-  console.log(parseInt(requests));
+  
   await setCache(ip, parseInt(requests) + 1);
 
   next();

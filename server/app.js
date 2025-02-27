@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
 import morgan from "morgan";
+import session from "express-session";
+import { RedisStore } from "connect-redis";
 import cookieParser from "cookie-parser";
 
 import { connect } from "./utils/connection.js";
@@ -14,6 +16,7 @@ import { adminRouter } from "./router/admin.router.js";
 import { orderRouter } from "./router/order.router.js";
 import asyncHandler from "./utils/asyncHandler.js";
 import { rateLimiter } from "./middleware/limit.js";
+import { options } from "./constants/config.js";
 
 
 
@@ -29,6 +32,16 @@ const port = process.env.PORT || 4000;
 app.get("/", (req, res) => {
   return res.send("Hello, world!");
 });
+
+
+app.use(session({
+  store :new RedisStore({client}),
+  secret:process.env.SESSION_SECRET_KEY,
+  saveUninitialized:false,
+  resave:false,
+  name:'sessionId',
+  cookie:options,
+}))
 
 app.use(asyncHandler(rateLimiter))
 
