@@ -17,6 +17,7 @@ import asyncHandler from "./utils/asyncHandler.js";
 import { rateLimiter } from "./middleware/limit.js";
 import { options, PORT } from "./constants/config.js";
 import { userRouter } from "./router/user.router.js";
+import { i18nMiddleware } from "./config/i18n.js";
 
 
 
@@ -42,6 +43,8 @@ app.use(session({
   name:'sessionId',
   cookie:options,
 }))
+
+app.use(i18nMiddleware)
 
 app.use(asyncHandler(rateLimiter))
 

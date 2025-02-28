@@ -16,7 +16,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const getAllProducts = async (_, res) => {
+const getAllProducts = async (req, res) => {
   const cachedProducts = await getCache(ALL_PRODUCTS);
 
   if (cachedProducts) {
@@ -33,7 +33,7 @@ const getAllProducts = async (_, res) => {
 
   return res.status(200).json({
     success: true,
-    message: "Products retrieved successfully",
+    message: "Products retrieved successfully ",
     products,
   });
 };
@@ -130,13 +130,13 @@ const exportProducts = async (req, res) => {
     };
   });
   writeToExcel(data, "products.xlsx");
-  console.log(__dirname, "../upload/products.xlsx");
+  
   const filePath = path.join(__dirname, "../upload/products.xlsx");
-  console.log(filePath);
+
 
   await sendEmailWithAttachment(filePath)
   fs.unlinkSync(filePath);
-  
+
   return res.status(200).json({
     success: true,
     message: "Products exported successfully",

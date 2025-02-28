@@ -19,7 +19,9 @@ const DB_URL = process.env.DB_URL;
 
 const REDIS_URL = process.env.REDIS_URL;
 
-const EMAIL=process.env.EMAIL
+const SENDER_MAIL=process.env.SENDER_MAIL
+
+const RECEIVER_MAIL=process.env.RECEIVER_MAIL
 
 const PASSWORD=process.env.PASSWORD
 
@@ -33,6 +35,7 @@ export {
   JWT_SECRET_KEY,
   RATE_LIMIT,
   DB_URL,
-  EMAIL,
+  SENDER_MAIL,
+  RECEIVER_MAIL,
   PASSWORD,
 };

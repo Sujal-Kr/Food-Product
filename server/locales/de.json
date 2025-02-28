@@ -1,0 +1,21 @@
+{
+    "product": {
+      "product_added": "Produkt erfolgreich hinzugefügt",
+      "product_created": "Produkt erfolgreich erstellt",
+      "product_updated": "Produkt erfolgreich aktualisiert",
+      "product_deleted": "Produkt erfolgreich gelöscht",
+      "product_not_found": "Produkt nicht gefunden"
+    },
+    "auth": {
+      "login": "Anmelden",
+      "login_success": "Erfolgreich angemeldet",
+      "login_failed": "Anmeldung fehlgeschlagen. Bitte überprüfen Sie Ihre Anmeldedaten",
+      "signup": "Registrieren",
+      "signup_success": "Konto erfolgreich erstellt",
+      "signup_failed": "Registrierung fehlgeschlagen. Bitte versuchen Sie es erneut",
+      "logout": "Abmelden",
+      "logout_success": "Erfolgreich abgemeldet",
+      "password_reset": "Passwort zurücksetzen",
+      "password_reset_sent": "Anweisungen zum Zurücksetzen des Passworts wurden an Ihre E-Mail gesendet"
+    }
+  }

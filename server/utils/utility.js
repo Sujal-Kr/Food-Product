@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import xlsx from "xlsx";
 import nodemailer from "nodemailer";
-import { EMAIL, options, PASSWORD } from "../constants/config.js";
+import xlsx from "xlsx";
+import { options, PASSWORD, RECEIVER_MAIL, SENDER_MAIL } from "../constants/config.js";
 const sendToken = (res, user, code, message) => {
   const token = jwt.sign({ _id: user._id }, JWT_SECRET_KEY);
   res.cookie("token", token, options);
@@ -33,21 +33,21 @@ const readFromExcel = (buffer) => {
   const sheet = workbook.Sheets[sheetName];
   const data = xlsx.utils.sheet_to_json(sheet);
   return data;
-  
+
 };
 
 const sendEmailWithAttachment = async (filePath) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: EMAIL,
+      user: SENDER_MAIL,
       pass: PASSWORD,
     },
   });
 
   const mailOptions = {
-    from: EMAIL,
-    to: "sujalkr829@gmail.com",
+    from: SENDER_MAIL,
+    to: RECEIVER_MAIL,
     subject: "Exported Products Data",
     text: "Please find attached the exported product data.",
     attachments: [
@@ -61,4 +61,5 @@ const sendEmailWithAttachment = async (filePath) => {
   await transporter.sendMail(mailOptions);
   console.log("Email sent successfully!");
 };
-export { sendToken, readFromExcel, writeToExcel, sendEmailWithAttachment };
+export { readFromExcel, sendEmailWithAttachment, sendToken, writeToExcel };
+

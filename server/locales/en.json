@@ -1,0 +1,21 @@
+{
+    "product": {
+      "product_added": "Product added successfully",
+      "product_created": "Product created successfully",
+      "product_updated": "Product updated successfully",
+      "product_deleted": "Product deleted successfully",
+      "product_not_found": "Product not found"
+    },
+    "auth": {
+      "login": "Log in",
+      "login_success": "Logged in successfully",
+      "login_failed": "Login failed. Please check your credentials",
+      "signup": "Sign up",
+      "signup_success": "Account created successfully",
+      "signup_failed": "Signup failed. Please try again",
+      "logout": "Log out",
+      "logout_success": "Logged out successfully",
+      "password_reset": "Reset password",
+      "password_reset_sent": "Password reset instructions sent to your email"
+    }
+  }

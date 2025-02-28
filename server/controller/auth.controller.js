@@ -21,7 +21,7 @@ const login = async (req, res) => {
   console.log(req.session._id);
   return res.status(200).json({
     success: true,
-    message: `Welcome ${user.name}`,
+    message: req.t("auth.login_success"),
     user,
   });
 };
