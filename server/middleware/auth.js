@@ -2,9 +2,10 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/error.js";
 import { userModel } from "../models/user.model.js";
 import _ from "lodash";
+import { JWT_SECRET_KEY } from "../constants/config.js";
 
 const protectRoute = async (req, _, next) => {
-  const secret = process.env.JWT_SECRET_KEY;
+  const secret = JWT_SECRET_KEY;
   try {
     const token = req.cookies?.token;
 
@@ -32,7 +33,7 @@ const sessionRoute = (req, res, next) => {
 };
 
 const adminRoute = (req, _, next) => {
-  const secret = process.env.JWT_SECRET_KEY;
+  const secret = JWT_SECRET_KEY;
 
   const token = req.cookies?.admin;
 
@@ -43,7 +44,7 @@ const adminRoute = (req, _, next) => {
   if (!payload) {
     throw new ApiError(400, "Invalid token");
   }
-  const admin = process.env.ADMIN_SECRET_KEY || "amdin";
+  const admin = ADMIN_SECRET_KEY || "amdin";
 
   const isMatch = payload.key === admin;
 

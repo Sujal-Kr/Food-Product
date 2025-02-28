@@ -4,14 +4,14 @@ import jwt from "jsonwebtoken";
 
 const verify = async (req, res) => {
   const { secret } = req.body;
-  const key = process.env.ADMIN_SECRET_KEY || "admin";
+  const key = ADMIN_SECRET_KEY || "admin";
   
   const isMatch = key === secret;
 
   if (!isMatch) {
     throw new ApiError(400, "Wrong Credential");
   }
-  const token = jwt.sign({ key }, process.env.JWT_SECRET_KEY);
+  const token = jwt.sign({ key }, JWT_SECRET_KEY);
   if (!token) {
     throw new ApiError(400, "Invalid token");
   }

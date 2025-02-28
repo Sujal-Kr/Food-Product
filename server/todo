@@ -1,2 +1,5 @@
 1. use validation for inserting product .
 2. implement session using redis
+3. use xlxs and buffer 
+4. export 
+5.i18

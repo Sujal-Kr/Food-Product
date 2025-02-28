@@ -29,7 +29,7 @@ productRouter.route("/upload").post(
   // validateRequest(fileSchema, "file"),
   asyncHandler(insertProducts)
 );
-
+// export product
 productRouter
   .route("/")
   .post(validateRequest(productSchema), asyncHandler(createProduct));

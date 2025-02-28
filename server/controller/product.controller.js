@@ -83,6 +83,8 @@ const updateProduct = async (req, res) => {
   });
 };
 
+
+// 
 const insertProducts = async (req, res, next) => {
   const file = req.file.path;
 
