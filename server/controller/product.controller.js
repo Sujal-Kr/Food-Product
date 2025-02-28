@@ -1,11 +1,20 @@
 import fs from "fs";
-import csv from "csv-parser";
+import path from "path";
 import _ from "lodash";
 import { ALL_PRODUCTS } from "../constants/data.js";
 import { deleteCache, getCache, setCache } from "../lib/redis.js";
 import { productModel } from "../models/product.model.js";
 import { ApiError } from "../utils/error.js";
 import { productSchema } from "../schema/product.js";
+import {
+  readFromExcel,
+  sendEmailWithAttachment,
+  writeToExcel,
+} from "../utils/utility.js";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const getAllProducts = async (_, res) => {
   const cachedProducts = await getCache(ALL_PRODUCTS);
@@ -83,46 +92,55 @@ const updateProduct = async (req, res) => {
   });
 };
 
+//
+const insertProducts = async (req, res) => {
+  const buffer = req.file.buffer;
 
-// 
-const insertProducts = async (req, res, next) => {
-  const file = req.file.path;
+  const data = readFromExcel(buffer);
 
   const products = [];
-  const errors = [];
 
-  fs.createReadStream(file)
-    .pipe(csv())
-    .on("data", (data) => {
-      const { error, value } = productSchema.validate(data);
+  for (let product of data) {
+    const { error, value } = productSchema.validate(product);
+    if (error) {
+      throw new ApiError(400, error.message);
+    }
+    products.push(value);
+  }
 
-        if (error) {
-          // console.log(`Validation failed: ${error.message}`)
-          errors.push(`Validation failed: ${error.message}`);
-          return; 
-        }
-        products.push(value);
-    })
-    .on("end", async () => {
-      fs.unlinkSync(file);
+  const insertedProducts = await productModel.insertMany(data);
 
-      if (errors) {
-        return next(new ApiError(400, `Some products failed validation: ${errors[0]}`));
-      }
+  await deleteCache(ALL_PRODUCTS);
 
-      const data = await productModel.insertMany(products);
-      await deleteCache(ALL_PRODUCTS);
+  return res.status(201).json({
+    success: true,
+    message: "Products inserted successfully",
+    products: insertedProducts,
+  });
+};
 
-      return res.status(201).json({
-        success: true,
-        message: "Product created successfully",
-        products: data,
-      });
-    })
-    .on("error", (err) => {
-      fs.unlinkSync(file);
-      throw new ApiError(500, `Error while parsing:${err.message}`);
-    });
+const exportProducts = async (req, res) => {
+  const products = await productModel.find({});
+  const data = products.map(({ _id, name, price, category }) => {
+    return {
+      _id: _id.toString(),
+      name,
+      price,
+      category,
+    };
+  });
+  writeToExcel(data, "products.xlsx");
+  console.log(__dirname, "../upload/products.xlsx");
+  const filePath = path.join(__dirname, "../upload/products.xlsx");
+  console.log(filePath);
+
+  await sendEmailWithAttachment(filePath)
+  fs.unlinkSync(filePath);
+  
+  return res.status(200).json({
+    success: true,
+    message: "Products exported successfully",
+  });
 };
 
 export {
@@ -131,4 +149,5 @@ export {
   getAllProducts,
   updateProduct,
   insertProducts,
+  exportProducts,
 };

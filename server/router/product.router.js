@@ -2,6 +2,7 @@ import express from "express";
 import {
   createProduct,
   deleteProduct,
+  exportProducts,
   getAllProducts,
   insertProducts,
   updateProduct,
@@ -24,12 +25,13 @@ productRouter.use(asyncHandler(sessionRoute));
 
 productRouter.use(asyncHandler(authorize([roles.ADMIN, roles.SUPER_ADMIN])));
 
-productRouter.route("/upload").post(
-  upload.single("product"),
-  // validateRequest(fileSchema, "file"),
-  asyncHandler(insertProducts)
-);
+productRouter
+  .route("/upload")
+  .post(upload.single("product"), asyncHandler(insertProducts));
 // export product
+
+productRouter.route("/export").get(asyncHandler(exportProducts));
+
 productRouter
   .route("/")
   .post(validateRequest(productSchema), asyncHandler(createProduct));
