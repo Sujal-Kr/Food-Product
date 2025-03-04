@@ -1,4 +1,4 @@
-import { options } from "../constants/config.js";
+import { ADMIN_SECRET_KEY, JWT_SECRET_KEY, options } from "../constants/config.js";
 import { ApiError } from "../utils/error.js";
 import jwt from "jsonwebtoken";
 
@@ -7,7 +7,6 @@ const verify = async (req, res) => {
   const key = ADMIN_SECRET_KEY || "admin";
   
   const isMatch = key === secret;
-
   if (!isMatch) {
     throw new ApiError(400, "Wrong Credential");
   }

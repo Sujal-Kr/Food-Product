@@ -54,7 +54,9 @@ const deleteProduct = async (req, res) => {
   const id = req.params.id;
   const product = await productModel.findById(id);
 
-  if (_isEmpty(product)) {
+  // TODO: Check if product is not found
+  
+  if (_.isEmpty(product)) {
     throw new ApiError(400, "Product not found");
   }
 

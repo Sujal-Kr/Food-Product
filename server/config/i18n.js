@@ -3,7 +3,7 @@ import Backend from "i18next-fs-backend";
 import middleware from "i18next-http-middleware";
 import path from "path";
 
-console.log("this is my cwd",process.cwd())
+
 
 i18next
   .use(Backend) // Use file system backend to load translations
