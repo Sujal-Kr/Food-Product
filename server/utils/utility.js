@@ -1,7 +1,13 @@
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import xlsx from "xlsx";
-import { options, PASSWORD, RECEIVER_MAIL, SENDER_MAIL } from "../constants/config.js";
+import {
+  JWT_SECRET_KEY,
+  options,
+  PASSWORD,
+  RECEIVER_MAIL,
+  SENDER_MAIL,
+} from "../constants/config.js";
 const sendToken = (res, user, code, message) => {
   const token = jwt.sign({ _id: user._id }, JWT_SECRET_KEY);
   res.cookie("token", token, options);
@@ -21,19 +27,17 @@ const writeToExcel = (products, fileName) => {
   const worksheet = xlsx.utils.json_to_sheet(products);
   const workbook = xlsx.utils.book_new();
   xlsx.utils.book_append_sheet(workbook, worksheet, "Products");
-  console.log("first")
+  console.log("first");
   xlsx.writeFile(workbook, `upload/${fileName}`);
   console.log(`Excel file ${fileName} written successfully`);
 };
 
 const readFromExcel = (buffer) => {
-
   const workbook = xlsx.read(buffer, { type: "buffer" });
   const sheetName = workbook.SheetNames[0];
   const sheet = workbook.Sheets[sheetName];
   const data = xlsx.utils.sheet_to_json(sheet);
   return data;
-
 };
 
 const sendEmailWithAttachment = async (filePath) => {
@@ -62,4 +66,3 @@ const sendEmailWithAttachment = async (filePath) => {
   console.log("Email sent successfully!");
 };
 export { readFromExcel, sendEmailWithAttachment, sendToken, writeToExcel };
-

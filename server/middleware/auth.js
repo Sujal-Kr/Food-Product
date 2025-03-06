@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import { ApiError } from "../utils/error.js";
 import { userModel } from "../models/user.model.js";
 import _ from "lodash";
-import { JWT_SECRET_KEY } from "../constants/config.js";
+import { ADMIN_SECRET_KEY, JWT_SECRET_KEY } from "../constants/config.js";
 
 const protectRoute = async (req, _, next) => {
   const secret = JWT_SECRET_KEY;

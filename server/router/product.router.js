@@ -1,4 +1,5 @@
 import express from "express";
+import { roles } from "../constants/data.js";
 import {
   createProduct,
   deleteProduct,
@@ -7,14 +8,12 @@ import {
   insertProducts,
   updateProduct,
 } from "../controller/product.controller.js";
-import { authorize, protectRoute, sessionRoute } from "../middleware/auth.js";
+import { authorize, sessionRoute } from "../middleware/auth.js";
+import { upload } from "../middleware/multer.js";
 import { validateRequest } from "../middleware/validation.js";
 import { objectIdSchema } from "../schema/objectId.js";
 import { productSchema } from "../schema/product.js";
 import asyncHandler from "../utils/asyncHandler.js";
-import { roles } from "../constants/data.js";
-import { upload } from "../middleware/multer.js";
-import { fileSchema } from "../schema/productFile.js";
 const productRouter = express.Router();
 
 //use middleware protect route
@@ -52,3 +51,4 @@ productRouter
   );
 
 export { productRouter };
+
