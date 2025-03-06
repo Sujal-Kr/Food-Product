@@ -16,22 +16,43 @@ const login = async (req, res) => {
   if (!isMatch) {
     throw new ApiError(400, "Wrong password");
   }
-  sendToken(res, user, 200, `Welcome ${user.name}`);
+  // sendToken(res, user, 200, `Welcome ${user.name}`);
+  req.session._id = user._id;
+
+  return res.status(200).json({
+    success: true,
+    message: req.t("auth.login_success"),
+    user,
+  });
 };
 
 const signup = async (req, res) => {
   const { name, email, password } = req.body;
 
   const user = await userModel.findOne({ email });
+
   if (user) {
-    throw new ApiError(400, "Email allready exists");
+    throw new ApiError(400, "Email already exists");
   }
-  const newuser = await userModel.create({ name, email, password });
-  sendToken(res, newuser, 201, `Welcome ${newuser.name}`);
+
+  const newUser = await userModel.create({ name, email, password });
+  // sendToken(res, newUser, 201, `Welcome ${newUser.name}`);
+  req.session._id = newUser._id; 
+  return res.status(200).json({
+    success: true,
+    message: `Welcome ${newUser.name}`,
+    user: newUser,
+  });
 };
 
-const logout = async (_, res) => {
-  res.cookie("token", "", { ...options, maxAge: 0 });
+const logout = async (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      throw new ApiError(500, err.message);
+    }
+  });
+
+  res.cookie("sessionId", "", { ...options, maxAge: 0 });
   return res.status(200).json({
     success: true,
     message: "You have been logged out",

@@ -1,5 +1,5 @@
 import express from "express";
-import { protectRoute } from "../middleware/auth.js";
+import { protectRoute, sessionRoute } from "../middleware/auth.js";
 import {
   createOrder,
   deleteOrder,
@@ -13,7 +13,7 @@ import { orderValidationSchema, paymentStatus } from "../schema/order.js";
 
 const orderRouter = express.Router();
 
-orderRouter.use(protectRoute);
+orderRouter.use(sessionRoute);
 
 orderRouter
   .route("/")

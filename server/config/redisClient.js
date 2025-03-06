@@ -1,9 +1,8 @@
-import redis from "redis";
+import  { createClient } from "redis";
 import { REDIS_URL } from "../constants/config.js";
 
 
-
-const client = redis.createClient({ url: process.env.REDIS_URL });
+const client = createClient({ url:REDIS_URL});
 
 client.on("error", (err) => {
   console.log("Redis Connection Error", err.message);
