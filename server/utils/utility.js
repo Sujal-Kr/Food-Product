@@ -21,7 +21,7 @@ const writeToExcel = (products, fileName) => {
   const worksheet = xlsx.utils.json_to_sheet(products);
   const workbook = xlsx.utils.book_new();
   xlsx.utils.book_append_sheet(workbook, worksheet, "Products");
-
+  console.log("first")
   xlsx.writeFile(workbook, `upload/${fileName}`);
   console.log(`Excel file ${fileName} written successfully`);
 };

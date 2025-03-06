@@ -94,6 +94,7 @@ const updateProduct = async (req, res) => {
   });
 };
 
+
 //
 const insertProducts = async (req, res) => {
   const buffer = req.file.buffer;
@@ -101,7 +102,6 @@ const insertProducts = async (req, res) => {
   const data = readFromExcel(buffer);
 
   const products = [];
-  const errors = [];
 
   for (let product of data) {
     const { error, value } = productSchema.validate(product);
