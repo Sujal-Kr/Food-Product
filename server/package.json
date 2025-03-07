@@ -8,7 +8,7 @@
     "start": "node app.js",
     "dev": "nodemon app.js",
     "lint": "eslint .",
-    "format":"prettier . --write",
+    "format": "prettier . --write",
     "prepare": "husky"
   },
   "keywords": [],
@@ -45,11 +45,11 @@
     "lint-staged": "^15.4.3",
     "prettier": "^3.5.3"
   },
-  
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "git add ."
     ]
   }
 }
