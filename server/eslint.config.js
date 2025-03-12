@@ -17,8 +17,8 @@ export default [
     //   "curly": ["warn", "none"], // Require curly braces for all control statements
     //   "no-var": "error", // Disallow `var` in favor of `let` and `const`
     //   "prefer-const": "error", // Suggest `const` if a variable is not reassigned
-    //   // "arrow-body-style": ["error", "as-needed"], // Enforce concise arrow function syntax where possible
-    //   // "no-trailing-spaces": "error", // Disallow trailing spaces
+      // "arrow-body-style": ["error", "as-needed"], // Enforce concise arrow function syntax where possible
+      // "no-trailing-spaces": "error", // Disallow trailing spaces
     // },
     ignores:["env","node_modules","dockerfile","dockerignore","gitignore","eslintrc","eslintignore"],
     
